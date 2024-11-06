@@ -1,0 +1,44 @@
+{% extends "./base_generic.html" %} {% block content %}
+<h2 class="text-2xl text-center mt-8">Add Achievement and Milestone</h2>
+<form method="post">
+  {% csrf_token %}
+  <div class="max-w-lg mx-auto flex flex-col justify-between items-start gap-5">
+    <div id="no-options" style="display: none; color: red">
+      Nothing to select
+    </div>
+    {{ form.as_p }} {{ error }}
+    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">
+      Save
+    </button>
+  </div>
+</form>
+
+<h3 class="text-3xl mt-10 mb-5">Your Achievements and Milestones</h3>
+{% for achievement in achievements_with_milestones %}
+<div class="mb-10">
+  <h2 class="text-red-600 font-bold uppercase text-lg mb-4">
+    {{ achievement.name }}
+  </h2>
+  <div class="relative pl-10">
+    <!-- Vertical Line -->
+    <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-red-500"></div>
+
+    {% for milestone in achievement.milestones_set.all %}
+    <div class="flex items-center mb-6">
+      <!-- Year -->
+      <div class="w-12 text-center text-gray-500 font-bold">
+        {{ milestone.year }}
+      </div>
+      <!-- Milestone box -->
+      <div
+        class="flex-1 ml-4 p-4 rounded-lg font-semibold text-white"
+        style="background-color: {% cycle '#FCA5A5' '#A5F3FC' '#FDE68A' %};"
+      >
+        {{ milestone.order }}. {{ milestone.step.step_description }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endfor %} {% endblock %}

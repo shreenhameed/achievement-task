@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Achievement App</title>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+    {% load static %}
+
+    <link href="{% static '/css/dist/styles.css' %}" rel="stylesheet" />
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <div class="container mx-auto">
+      <main>{% block content %} {% endblock %}</main>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("hell");
+        const achievementSelect = document.getElementById("id_achievement");
+        const stepSelect = document.getElementById("id_step");
+
+        achievementSelect.addEventListener("change", function () {
+          const achievementId = this.value;
+          console.log("helloo");
+
+          // Make an AJAX request to load steps
+          fetch(`/achievements/load-steps/?achievement_id=${achievementId}`)
+            .then((response) => response.json())
+            .then((data) => {
+              // Clear previous options in the step dropdown
+              stepSelect.innerHTML = "";
+
+              // Populate the step dropdown with new options
+              data.forEach((item) => {
+                const option = document.createElement("option");
+                option.value = item.id;
+                option.textContent = item.step_description;
+                stepSelect.appendChild(option);
+              });
+            })
+            .catch((error) => console.error("Error fetching steps:", error));
+        });
+      });
+    </script>
+  </body>
+</html>
